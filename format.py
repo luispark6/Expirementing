@@ -12,6 +12,16 @@ def main():
     api_version = "v3"
     api_key = "AIzaSyC22GFWR6balVvcOFszYZ9ce0GTGmgff14" #my api key
     youtube = build(api_service_name, api_version, developerKey=api_key)
+
+    #connecting to local host which is my computer
+    mydb = mysql.connector.connect(
+    host = "localhost",
+    user = "root",
+    password = "Leoluis02",
+    database = "Youtube_Statistics"
+    )
+    #creating object that allows me to execute SQL queries
+    mycursor = mydb.cursor()
     
 
     rick= "UCJquYOG5EL82sKTfH9aMA9Q" #the id for ricks channel
@@ -44,6 +54,7 @@ def main():
     vertasium["channel"] = response_channel["items"][0]["snippet"]['title']
     vertasium["description"] = response_channel["items"][0]["snippet"]['description']
     vertasium["statistics"] = response_channel["items"][0]['statistics']
+    
     #this will be used to get information for each vide
     #the video id will be used to scrap specific video stats such as likes and views
     acc = 0
@@ -60,14 +71,10 @@ def main():
         response_video_id = request_video_id.execute()
         vertasium[acc].append(response_video_id["items"][0]["statistics"])
 
-   # print(vertasium)
-    mydb = mysql.connector.connect(
-    host = "localhost",
-    user = "Luis Parl",
-    password = "Leoluis02"
-    )
- 
-# Printing the connection object
-    print(mydb)
 
+    #print(vertasium)
+    
+
+ 
+    mydb.close()
 main()
