@@ -45,9 +45,20 @@ def main():
     vertasium["statistics"] = response_channel["items"][0]['statistics']
     #this will be used to get information for each vide
     #the video id will be used to scrap specific video stats such as likes and views
+    acc = 0
+    #in this for loop, the acc will be the key for the ith video title, time it released
+    #video id, the description of the video, and another dictionary with statistics of the video
     for i in response_videos['items']:
-        print(i['snippet']['title'])
-        print(i['contentDetails']['videoPublishedAt'])
-        print(i['contentDetails']['videoId'])
-        print(i['snippet']['description'])
+        acc = acc+ 1
+        vertasium[acc] = [i['snippet']['title'],i['contentDetails']['videoPublishedAt'], \
+            i['contentDetails']['videoId'],i['snippet']['description']]
+
+        request_video_id = youtube.videos().list(
+        part="snippet,contentDetails,statistics",
+        id=vertasium[acc][2])
+        response_video_id = request_video_id.execute()
+        vertasium[acc].append(response_video_id["items"][0]["statistics"])
+
+    print(vertasium)
+
 main()
