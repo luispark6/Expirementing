@@ -4,9 +4,10 @@ from sys import api_version
 import googleapiclient.discovery
 from googleapiclient.discovery import build
 import googleapiclient.errors
+import mysql.connector
+
+
 def main():
-
-
     api_service_name = "youtube"
     api_version = "v3"
     api_key = "AIzaSyC22GFWR6balVvcOFszYZ9ce0GTGmgff14" #my api key
@@ -59,6 +60,14 @@ def main():
         response_video_id = request_video_id.execute()
         vertasium[acc].append(response_video_id["items"][0]["statistics"])
 
-    print(vertasium)
+   # print(vertasium)
+    mydb = mysql.connector.connect(
+    host = "localhost",
+    user = "Luis Parl",
+    password = "Leoluis02"
+    )
+ 
+# Printing the connection object
+    print(mydb)
 
 main()
