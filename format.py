@@ -72,7 +72,7 @@ def main():
         vertasium[acc].append(response_video_id["items"][0]["statistics"])
 
 
-    #print(vertasium)
+    print(vertasium)
     
 
  
