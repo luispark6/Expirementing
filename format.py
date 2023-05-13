@@ -5,9 +5,10 @@ import googleapiclient.discovery
 from googleapiclient.discovery import build
 import googleapiclient.errors
 import mysql.connector
+import matplotlib.pyplot as plt
 
-
-
+##Primary ID could be the time cause no time can be the same.
+#good way to uniquely identify each register of channel's databin/mysqladmin -u root shutdown -p
 
 def main():
     api_service_name = "youtube"
@@ -27,7 +28,7 @@ def main():
 
     #will output table named "channels", and we will fetch
     #this output with fetchone
-    cursor.execute("SHOW TABLES LIKE 'channels'")
+    cursor.execute("SHOW TABLES LIKE 'Information'")
     result = cursor.fetchone()
     #if result is true(there is data with table name channels),
     #the tabel already exists which means we dont need to create
@@ -38,22 +39,17 @@ def main():
     else:
         # Create the channels table
         cursor.execute("""
-            CREATE TABLE channels (
+            CREATE TABLE Information (
                 id INT NOT NULL AUTO_INCREMENT,
                 channel VARCHAR(255),
                 views INT,
                 likes INT,
-                time DATETIME,
-                subscribers INT,
+                time INT,
+                subscribers VARCHAR(255),
                 PRIMARY KEY (id)
             )
         """)
         print("Table created successfully")
-
-
-
-
-
 
     
 
@@ -63,7 +59,7 @@ def main():
     #requesting the channel information from youtube server
     request_channel_info = youtube.channels().list( 
         part="snippet,contentDetails,statistics",
-        id=rick
+        id=vert
     )
     #executes the request and feeds the information to response channel
     response_channel = request_channel_info.execute()
@@ -103,6 +99,15 @@ def main():
         id=vertasium[acc][2])
         response_video_id = request_video_id.execute()
         vertasium[acc].append(response_video_id["items"][0]["statistics"])
+
+
+    # Defines the data to insert
+    data = [("Vertaisum", int(vertasium['statistics']['viewCount']), 500, "2023-05-13 12:00:00", 10000)]
+    # Insert the data into the table
+    sql = "INSERT INTO Information (channel, views, likes, time, subscribers) VALUES (%s, %s, %s, %s, %s)"
+    cursor.executemany(sql, data)
+
+    mydb.commit()
 
 
     print(vertasium)
