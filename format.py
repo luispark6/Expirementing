@@ -7,6 +7,8 @@ import googleapiclient.errors
 import mysql.connector
 
 
+
+
 def main():
     api_service_name = "youtube"
     api_version = "v3"
@@ -21,7 +23,38 @@ def main():
     database = "Youtube_Statistics"
     )
     #creating object that allows me to execute SQL queries
-    mycursor = mydb.cursor()
+    cursor = mydb.cursor()
+
+    #will output table named "channels", and we will fetch
+    #this output with fetchone
+    cursor.execute("SHOW TABLES LIKE 'channels'")
+    result = cursor.fetchone()
+    #if result is true(there is data with table name channels),
+    #the tabel already exists which means we dont need to create
+    #a row of the necessary columns(likes, views, channel name, etc.)
+    if result:
+        # Table exists, do nothing
+        print("Table already exists")
+    else:
+        # Create the channels table
+        cursor.execute("""
+            CREATE TABLE channels (
+                id INT NOT NULL AUTO_INCREMENT,
+                channel VARCHAR(255),
+                views INT,
+                likes INT,
+                time DATETIME,
+                subscribers INT,
+                PRIMARY KEY (id)
+            )
+        """)
+        print("Table created successfully")
+
+
+
+
+
+
     
 
     rick= "UCJquYOG5EL82sKTfH9aMA9Q" #the id for ricks channel
@@ -73,8 +106,6 @@ def main():
 
 
     print(vertasium)
-    
 
- 
     mydb.close()
 main()
