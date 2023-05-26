@@ -1,5 +1,8 @@
 
 import os
+os.system("sudo chown -R _mysql:mysql /usr/local/var/mysql") 
+os.system("sudo mysql.server start")
+
 from sys import api_version
 import googleapiclient.discovery
 from googleapiclient.discovery import build
@@ -12,7 +15,7 @@ import matplotlib.pyplot as plt
 
 def main():
     api_service_name = "youtube"
-    api_version = "v3"
+    api_version = "v3"            
     api_key = "AIzaSyC22GFWR6balVvcOFszYZ9ce0GTGmgff14" #my api key
     youtube = build(api_service_name, api_version, developerKey=api_key)
 
@@ -44,8 +47,8 @@ def main():
                 channel VARCHAR(255),
                 views INT,
                 likes INT,
-                time INT,
-                subscribers VARCHAR(255),
+                time VARCHAR(255),
+                subscribers INT,
                 PRIMARY KEY (id)
             )
         """)
@@ -101,8 +104,10 @@ def main():
         vertasium[acc].append(response_video_id["items"][0]["statistics"])
 
 
+    print(vertasium)
+
     # Defines the data to insert
-    data = [("Vertaisum", int(vertasium['statistics']['viewCount']), 500, "2023-05-13 12:00:00", 10000)]
+    data = [("Vertaisum", int(vertasium['statistics']['viewCount']), 500, '2023:05:13T14:06:52Z', int(vertasium['statistics']['subscriberCount']))]
     # Insert the data into the table
     sql = "INSERT INTO Information (channel, views, likes, time, subscribers) VALUES (%s, %s, %s, %s, %s)"
     cursor.executemany(sql, data)
@@ -110,7 +115,9 @@ def main():
     mydb.commit()
 
 
-    print(vertasium)
+    
 
     mydb.close()
+
+    os.system("sudo mysql.server stop")
 main()
