@@ -29,7 +29,7 @@ def main():
     #creating object that allows me to execute SQL queries
     cursor = mydb.cursor()
 
-    #will output table named "channels", and we will fetch
+    #will output table named "Information", and we will fetch
     #this output with fetchone
     cursor.execute("SHOW TABLES LIKE 'Information'")
     result = cursor.fetchone()
@@ -105,19 +105,20 @@ def main():
 
 
     print(vertasium)
+    mydb.close()
 
     # Defines the data to insert
-    data = [("Vertaisum", int(vertasium['statistics']['viewCount']), 500, '2023:05:13T14:06:52Z', int(vertasium['statistics']['subscriberCount']))]
+    #data = [("Vertaisum", int(vertasium['statistics']['viewCount']), 500, '2023:05:13T14:06:52Z', int(vertasium['statistics']['subscriberCount']))]
     # Insert the data into the table
-    sql = "INSERT INTO Information (channel, views, likes, time, subscribers) VALUES (%s, %s, %s, %s, %s)"
-    cursor.executemany(sql, data)
+    #sql = "INSERT INTO Information (channel, views, likes, time, subscribers) VALUES (%s, %s, %s, %s, %s)"
+    #cursor.executemany(sql, data)
 
     mydb.commit()
 
 
     
 
-    mydb.close()
+    
 
     os.system("sudo mysql.server stop")
 main()
